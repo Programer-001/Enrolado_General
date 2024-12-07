@@ -1,0 +1,35 @@
+/*Formato para tabla de AWG*/
+
+table {
+  width: 50%;
+  border-collapse: collapse; /* Para que las celdas de la tabla no tengan espacio entre ellas */
+  margin-left: 10px;
+}
+
+th,
+td {
+  padding: 10px; /* Añadir un poco de espacio dentro de las celdas */
+  text-align: left; /* Alinear el texto a la izquierda */
+  border: 1px solid #ddd; /* Bordes de las celdas */
+  color: white; /* Cambia el color del texto de las celdas a blanco */
+}
+
+th {
+  background-color: #eb5f0e; /* Fondo gris para los encabezados */
+  font-weight: bold; /* Hacer el texto en los encabezados en negrita */
+}
+
+/* Estilo para la fila cuando se pasa el ratón */
+tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Para el total de filas */
+p {
+  font-size: 16px;
+  font-weight: normal;
+  color: #f3e0e0;
+}
+h1 {
+  color: white;
+}

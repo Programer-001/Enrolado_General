@@ -1,0 +1,306 @@
+/* Estilos generales */
+body {
+  font-family: sans-serif;
+  -webkit-font-smoothing: auto;
+  -moz-font-smoothing: auto;
+  -moz-osx-font-smoothing: grayscale;
+  font-smoothing: auto;
+  text-rendering: optimizeLegibility;
+  font-smooth: always;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  background-color: rgb(0, 0, 0);
+  margin: 20;
+  padding: 0;
+}
+
+/* Contenedor principal */
+.App {
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, sans-serif;
+  align-items: center; /* Alineamos los elementos a la izquierda */
+  gap: 1px;
+  color: white;
+  padding: 1px;
+}
+
+/* Estilos para los selectores */
+.Alambre-select,
+.guia-select {
+  width: 100%;
+  max-width: 300px;
+  height: 50px;
+  margin: 5px;
+}
+
+/* Cambiar la alineación en el contenedor de selectores */
+.selectores {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start; /* Alineamos los selectores a la izquierda */
+  gap: 60px; /* Añadimos espacio entre los selectores */
+}
+/*Selector de diametros*/
+.diametro_select {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start; /* Alineamos los selectores a la izquierda */
+  gap: 60px; /* Añadimos espacio entre los selectores */
+  width: auto;
+  margin: 10px;
+  max-width: 120px;
+}
+/* Estilos para el botón */
+.Calcular_1 {
+  background-color: #f44336;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 8px;
+  transition-duration: 0.4s;
+  margin-bottom: 40px;
+  margin: 10px;
+}
+
+.Calcular_1:hover {
+  background-color: white;
+  color: rgb(160, 55, 55);
+  border: 2px solid #f44336;
+}
+
+.Calcular_1:active {
+  background-color: #f44336;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+/* Estilos para los encabezados */
+h3 {
+  color: rgb(235, 120, 27);
+  margin: 10px;
+}
+
+h4 {
+  color: rgb(235, 58, 27);
+  margin: 10px;
+}
+
+p {
+  color: rgb(255, 255, 255);
+  margin: 10px;
+}
+
+.Entrada {
+  width: 100%;
+  max-width: 100px;
+  height: 50px;
+}
+/*-------------------------------------------------------------------*/
+.logo {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  margin-bottom: -60px;
+
+  animation: changeColor 10s 2;
+}
+
+@keyframes rotar {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes changeColor {
+  0% {
+    stop-color: #f2f0ea;
+  }
+  50% {
+    stop-color: #ffc400;
+  }
+  100% {
+    stop-color: #ec8d10;
+  }
+}
+
+#id0 stop {
+  animation: changeColor 5s infinite;
+}
+
+/*-------------------------------------------------------------------*/
+
+input {
+  font-size: 18px;
+  font-family: Arial, sans-serif;
+  margin-left: 10px;
+}
+
+.resultados {
+  color: white;
+}
+
+.mostrar_tabla {
+  background-color: #3639f4;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 8px;
+  transition-duration: 0.4s;
+  margin-bottom: 40px;
+  margin: 10px;
+}
+
+.mostrar_tabla:hover {
+  background-color: white;
+  color: black;
+  border: 2px solid #3639f4;
+}
+
+/* Media Queries para dispositivos móviles y pantallas pequeñas */
+
+/* Para pantallas más pequeñas, ajustamos el tamaño de los botones y las fuentes */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+
+  .App {
+    flex-direction: column; /* Aseguramos que los elementos se apilen verticalmente */
+    align-items: center; /* Centramos los elementos */
+    gap: 10px; /* Reducimos el espacio entre el logo y el h1 */
+  }
+  h1 {
+    font-size: 200%;
+  }
+
+  .Alambre-select,
+  .guia-select {
+    width: 100%;
+    max-width: 250px;
+  }
+
+  .selector {
+    width: 100%;
+    max-width: 200px;
+    height: 80px;
+  }
+
+  .Calcular_1 {
+    padding: 12px 25px;
+    font-size: 14px;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+  }
+
+  h4 {
+    font-size: 1.3rem;
+  }
+
+  p {
+    font-size: 1rem;
+  }
+
+  .logo {
+    width: 80%;
+    max-width: 250px;
+    height: auto;
+  }
+
+  .selectores {
+    flex-direction: row; /* Asegura que los selectores estén en fila */
+    gap: 10px;
+    margin-bottom: 40px;
+  }
+
+  input {
+    width: 50%;
+    box-sizing: border-box;
+  }
+
+  .mostrar_tabla {
+    padding: 12px 25px;
+    font-size: 14px;
+  }
+}
+
+/* Para dispositivos más pequeños, como teléfonos móviles */
+@media (max-width: 480px) {
+  body {
+    font-size: 10px;
+  }
+
+  .App {
+    flex-direction: column; /* Aseguramos que los elementos se apilen verticalmente */
+    align-items: center; /* Centramos los elementos */
+    gap: 25px; /* Reducimos el espacio entre el logo y el h1 */
+  }
+
+  .Alambre-select,
+  .guia-select {
+    width: 100%;
+    max-width: 230px;
+  }
+
+  .selector {
+    width: 100%;
+    max-width: 180px;
+    height: 70px;
+  }
+
+  .Calcular_1 {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+  }
+
+  h4 {
+    font-size: 1rem;
+  }
+
+  p {
+    font-size: 0.9rem;
+  }
+
+  .logo {
+    width: 60%;
+    max-width: 200px;
+    height: auto;
+  }
+
+  .selectores {
+    flex-direction: column; /* Asegura que los selectores estén en fila */
+    align-items: flex-start; /* Alineamos a la izquierda */
+    justify-content: flex-start;
+    margin-bottom: 20px;
+  }
+
+  input {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  valores_VP {
+    margin-top: -100px;
+  }
+
+  .mostrar_tabla {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+}
