@@ -5,6 +5,7 @@ import React, { useEffect } from "react";
 import Table from "./components/Table"; // Importa el componente Tabla
 import Aislador from "./components/Aisladores";
 import { ReactComponent as Logo } from "./multimedia/formato_logo_blanco.svg";
+import { verificacion_aislador } from "./funciones/comp_funciones";
 
 export default function App() {
   const options = [
@@ -44,6 +45,7 @@ export default function App() {
   const [AWG_alambre, setAWG_alambre] = useState([]);
   const [Longitud_total, setLongitud_total] = useState(0);
   const [Resistencia_final, setResistencia_final] = useState(0);
+  const [compatibilidad_aisaldor, setcompatibilidad_aisaldor] = useState("");
   //------------------------------------------------->>
   const [tablaAWG, setTablaAWG] = useState<any[]>([]);
   const [tablaDatos, setTablaDatos] = useState<any[]>([]);
@@ -70,6 +72,10 @@ export default function App() {
   const [Diametro_Tubu, setDiametro_Tubu] = useState(0);
   const [Diametro_tubo_mm, setDiametro_tubo_mm] = useState(0);
   //Funciones--------------------------------------->>
+  useEffect(() => {
+    console.log("Diametro_Tubu actualizado:", Diametro_Tubu);
+  }, [Diametro_Tubu]); // Se ejecutará cada vez que Diametro_Tubu cambie
+
   useEffect(() => {
     fetch("/Alambre_array.txt")
       .then((response) => response.text())
@@ -250,6 +256,9 @@ export default function App() {
     const conversion = milimetros(longitud_2);
     const Numero_vueltas = conversion / ((diametro1 + diametro2) * 3.1416);
     const Resorte_final = centimetros(Numero_vueltas * diametro1);
+    setcompatibilidad_aisaldor(
+      verificacion_aislador(Diam_final, Diametro_Tubu)
+    );
     setResistencia(resistencia_1);
     setLongitud(mitad_long);
     setDiametro_final(Diam_final);
@@ -399,6 +408,7 @@ export default function App() {
         <p>{Longitud_total} m</p>
         <h4>Enrolado</h4>
         <p>{Resistencia_final} cm</p>
+        <p>{compatibilidad_aisaldor}</p>
       </div>
       <button onClick={Calc_Re} className="Calcular_1">
         Calcular
