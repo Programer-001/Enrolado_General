@@ -16,10 +16,11 @@
     "react-select": "5.8.3",
     "react-select-component-animated": "1.1.1",
     "react-select-control": "0.1.8",
-    "typeorm-scheduler": "1.2.0",
-    "scheduler": "0.23.2"
+    "scheduler": "0.23.2",
+    "typeorm-scheduler": "1.2.0"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@types/react": "18.2.38",
     "@types/react-dom": "18.2.15",
     "typescript": "4.4.4"

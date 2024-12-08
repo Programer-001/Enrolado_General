@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { cargarTablaAWG, cargarTablaDatos } from "../funciones/Cargar_tablas";
 import "../Style/tabla.css";
 
 const Table = () => {

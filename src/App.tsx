@@ -5,7 +5,12 @@ import React, { useEffect } from "react";
 import Table from "./components/Table"; // Importa el componente Tabla
 import Aislador from "./components/Aisladores";
 import { ReactComponent as Logo } from "./multimedia/formato_logo_blanco.svg";
-import { verificacion_aislador } from "./funciones/comp_funciones";
+import {
+  verificacion_aislador,
+  milimetros,
+  centimetros,
+} from "./funciones/comp_funciones";
+import { cargarTablaAWG, cargarTablaDatos } from "./funciones/Cargar_tablas";
 
 export default function App() {
   const options = [
@@ -75,97 +80,11 @@ export default function App() {
   useEffect(() => {
     console.log("Diametro_Tubu actualizado:", Diametro_Tubu);
   }, [Diametro_Tubu]); // Se ejecutará cada vez que Diametro_Tubu cambie
-
+  //--------------Carga de tablas-------------------------------->>
   useEffect(() => {
-    fetch("/Alambre_array.txt")
-      .then((response) => response.text())
-      .then((data) => {
-        console.log("Contenido del archivo:", data); // Verifica el contenido del archivo
-        const lines = data.split("\n").filter((line) => line.trim() !== ""); // Elimina líneas vacías
-
-        const parsedData = lines
-          .map((line) => {
-            // Usamos split(/\s+/) para dividir por cualquier cantidad de espacios o tabulaciones
-            const [calibre, diametro, resistividad, aumento] = line
-              .split(/\s+/)
-              .map((item) => parseFloat(item.trim()));
-
-            // Validamos que los datos sean números
-            if (
-              !isNaN(calibre) &&
-              !isNaN(diametro) &&
-              !isNaN(resistividad) &&
-              !isNaN(aumento)
-            ) {
-              return {
-                calibre,
-                diametro,
-                resistividad,
-                aumento,
-              };
-            }
-            return null; // Si hay datos inválidos, retornamos null
-          })
-          .filter((item) => item !== null); // Filtramos los datos nulos
-
-        console.log("Datos procesados:", parsedData); // Verifica si los datos están siendo procesados correctamente
-        setTablaAWG(parsedData);
-      })
-      .catch((error) => {
-        console.error("Error al cargar el archivo:", error);
-      });
+    cargarTablaAWG(setTablaAWG);
+    cargarTablaDatos(setTablaDatos);
   }, []);
-
-  useEffect(() => {
-    fetch("/Aisladores.txt") // Ruta del archivo de texto
-      .then((response) => response.text())
-      .then((data) => {
-        console.log("Contenido del archivo:", data); // Verifica el contenido del archivo
-
-        const lines = data.split("\n").filter((line) => line.trim() !== ""); // Eliminar líneas vacías
-
-        const parsedData = lines
-          .map((line) => {
-            const columns = line.split(/\s+/); // Dividimos por espacios/tabulaciones
-
-            // Comprobamos que haya al menos 5 columnas para cada línea
-            if (columns.length >= 5) {
-              const [aislador, tubo, diametro, tolerancia, diametro_final] =
-                columns;
-
-              const tuboNumero = fraccionANumero(tubo); // Convertir fracción a número
-              const diametroNumero = parseFloat(diametro);
-              const toleranciaNumero = parseFloat(tolerancia);
-              const diametroFinalNumero = parseFloat(diametro_final);
-              // Validamos los valores para asegurarnos de que sean números
-              if (
-                aislador &&
-                !isNaN(tuboNumero) &&
-                !isNaN(diametroNumero) &&
-                !isNaN(toleranciaNumero) &&
-                !isNaN(diametroFinalNumero)
-              ) {
-                return {
-                  aislador,
-                  tubo: tubo,
-                  diametro: diametroNumero,
-                  tolerancia: toleranciaNumero,
-                  diametro_final: diametroFinalNumero,
-                };
-              }
-            }
-            return null; // Si hay algún dato inválido, retornamos null
-          })
-          .filter((item) => item !== null); // Filtramos los datos nulos
-
-        console.log("Datos procesados:", parsedData); // Verifica los datos procesados
-        setTablaDatos(parsedData); // Actualiza el estado con los datos procesados
-      })
-      .catch((error) => {
-        console.error("Error al cargar el archivo:", error);
-      });
-  }, []);
-  console.log(tablaDatos);
   //----------------------------------------------------->>
   // Función para manejar el cambio del select
   const manejarCambioCalibre = (
@@ -282,12 +201,7 @@ export default function App() {
   const tomar_dato_alambre = (dato: number) => {
     setAlambre(dato);
   };
-  const milimetros = (dato: number): number => {
-    return dato * 1000;
-  };
-  const centimetros = (dato: number): number => {
-    return dato / 10;
-  };
+
   function convertirAPulgadasYMM(dato: number) {
     // Primero calculamos el valor de la fracción en pulgadas
     const valorEnPulgadas = dato;

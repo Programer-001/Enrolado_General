@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
+import { cargarTablaAWG, cargarTablaDatos } from "../funciones/Cargar_tablas";
 import "../Style/tabla.css";
-
+// Definir el tipo de los datos de la tabla AWG
+interface CableData {
+  calibre: number;
+  diametro: number;
+  resistividad: number;
+}
 const Table = () => {
-  const [data, setData] = useState<string[][]>([]);
+  const [data, setData] = useState<CableData[]>([]);
 
   useEffect(() => {
-    fetch("/Alambre_array.txt") // Suponiendo que el archivo está en la carpeta public
-      .then((response) => response.text())
-      .then((text) => {
-        const rows = text.split("\n"); // Separar el archivo por saltos de línea
-        const parsedData = rows.map((row) => row.split(/\s+/)); // Separar cada fila por cualquier cantidad de espacios/tabulaciones
-        setData(parsedData);
-      })
-      .catch((error) => console.error("Error al cargar el archivo:", error));
+    cargarTablaAWG(setData);
   }, []);
 
   return (
@@ -29,9 +28,9 @@ const Table = () => {
         <tbody>
           {data.map((row, index) => (
             <tr key={index}>
-              <td>{row[0]}</td> {/* Calibre */}
-              <td>{row[1]}</td> {/* Diámetro */}
-              <td>{row[2]}</td> {/* Resistividad */}
+              <td>{row.calibre}</td> {/* Calibre */}
+              <td>{row.diametro}</td> {/* Diámetro */}
+              <td>{row.resistividad}</td> {/* Resistividad */}
             </tr>
           ))}
         </tbody>
