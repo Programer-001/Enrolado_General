@@ -17,7 +17,9 @@
     "react-select-component-animated": "1.1.1",
     "react-select-control": "0.1.8",
     "scheduler": "0.23.2",
-    "typeorm-scheduler": "1.2.0"
+    "typeorm": "^0.3.20",
+    "typeorm-scheduler": "1.2.0",
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
