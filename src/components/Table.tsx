@@ -6,6 +6,7 @@ interface CableData {
   calibre: number;
   diametro: number;
   resistividad: number;
+  aumento: number;
 }
 const Table = () => {
   const [data, setData] = useState<CableData[]>([]);
@@ -23,6 +24,7 @@ const Table = () => {
             <th>Calibre</th>
             <th>Diámetro</th>
             <th>Resistividad</th>
+            <th>Aumento</th>
           </tr>
         </thead>
         <tbody>
@@ -31,6 +33,7 @@ const Table = () => {
               <td>{row.calibre}</td> {/* Calibre */}
               <td>{row.diametro}</td> {/* Diámetro */}
               <td>{row.resistividad}</td> {/* Resistividad */}
+              <td>{row.aumento}</td> {/* Aumento */}
             </tr>
           ))}
         </tbody>
