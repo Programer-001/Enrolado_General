@@ -11,7 +11,6 @@ import {
   centimetros,
 } from "./funciones/comp_funciones";
 import { cargarTablaAWG, cargarTablaDatos } from "./funciones/Cargar_tablas";
-import { Resistencia } from "./funciones/Calculos";
 
 export default function App() {
   const options = [
@@ -168,7 +167,7 @@ export default function App() {
     // Verificamos que ambos diametros tengan valores válidos (no sean null o undefined)
     const diametro1 = diametroPrimerCable ?? 0;
     const diametro2 = diametroSegundoCable ?? 0;
-    const resistencia_1 = Resistencia(voltaje, potencia);
+    const resistencia_1 = (voltaje * voltaje) / potencia;
     const mitad_long = longitud / 2;
     const Diam_final = (diametro2 ?? 0) + 2 * (diametro1 ?? 0);
     const Res_final = resistencia_1 + Resistencia_compactada;
