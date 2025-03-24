@@ -121,51 +121,42 @@ export const buscarValor = (
 };
 export const buscarValor_1 = async (
   valor1: number,
-  valor2: number,
-  rangoDatos: number[]
+  valor2: string,
+  rangoDatos: number[][] // Aseguramos que sea un array de arrays
 ) => {
-  // 🚨 Verificar que rangoDatos sea un array válido
   if (!Array.isArray(rangoDatos) || rangoDatos.length === 0) {
     return [["Error: Rango vacío o inválido"]];
   }
 
-  //Logger.log("📌 Buscando valores cercanos a: " + valor1 + " y " + diametro_aislador);
-  //Logger.log("📌 Tabla de entrada: " + JSON.stringify(rangoDatos));
+  let mejorFila: number[] | null = null;
+  let mejorDiferencia = Infinity;
 
-  var enrolado_1 = null;
-  var diametro = null;
-  var diametro_aislador = await Aislador(valor2); // 🔹 Llamar a la función correctamente
-  var mejorDiferencia = Infinity; // Guardamos la menor diferencia encontrada
+  let diametro_aislador = await obtenerDatosAislador(valor2);
+  if (diametro_aislador == null) {
+    return [["Error: Valor inválido para el aislador"]];
+  }
 
-  // Recorremos cada fila del rango de datos
-  for (var i = 0; i < rangoDatos.length; i++) {
-    // Verificar que la fila actual no sea undefined ni null
-    if (rangoDatos[i] && rangoDatos[i].length >= 2) {
-      var diferencia_1 = Math.abs(rangoDatos[i][0] - valor1); // Diferencia con el valor1
-      var diferencia_2 = Math.abs(rangoDatos[i][1] - diametro_aislador); // Diferencia con el diametro
+  for (let i = 0; i < rangoDatos.length; i++) {
+    if (Array.isArray(rangoDatos[i]) && rangoDatos[i].length >= 2) {
+      let diferencia_1 = Math.abs(rangoDatos[i][0] - valor1);
+      let diferencia_2 = Math.abs(
+        rangoDatos[i][1] - diametro_aislador.diametro_final
+      );
 
-      // Verificamos si la fila actual es la mejor opción
       if (
         rangoDatos[i][0] <= valor1 &&
-        rangoDatos[i][1] <= diametro_aislador &&
+        rangoDatos[i][1] <= diametro_aislador.diametro_final &&
         diferencia_1 + diferencia_2 < mejorDiferencia
       ) {
-        enrolado_1 = rangoDatos[i][0];
-        diametro = rangoDatos[i][1];
-        mejorDiferencia = diferencia_1 + diferencia_2; // Actualizamos la mejor diferencia
-        mejorFila = rangoDatos[i]; // Guardamos la fila completa
+        mejorDiferencia = diferencia_1 + diferencia_2;
+        mejorFila = rangoDatos[i];
       }
     }
   }
 
-  // 🔹 Devolver los valores en un array 2D para Google Sheets
-  if (enrolado_1 !== null && diametro !== null) {
-    //return [[enrolado_1, diametro]];
-    return [mejorFila];
-  } else {
-    return [["No encontrado", "-"]];
-  }
+  return mejorFila ? [mejorFila] : [["No encontrado", "-"]];
 };
+
 //---------------------------------------------------------------------------->>
 
 export const Enrolado_total = async (
@@ -185,7 +176,7 @@ export const Enrolado_total = async (
   }
 
   let diametro_Aislador = datosAislador.diametro_final;
-  Longitud /= 2; // Se ajusta la longitud
+  let mitad_tubo = (Longitud /= 2); // Se ajusta la longitud
   console.log("Mitad de la longitud:", Longitud);
   console.log("Diámetro del aislador:", diametro_Aislador);
 
@@ -270,10 +261,17 @@ export const Enrolado_total = async (
 
     //Logger.log("🔹 Rango de datos para columnas " + (columna + 1) + " y " + (columna + 2) + ": " + JSON.stringify(rangoDatos));
     //Logger.log("tubo: "+ (longitud_tubo/2)+" tubo: "+tubo);
-    let mejorOpcion = buscarValor_1(longitud_tubo / 2, tubo, rangoDatos);
+    let salida: (number | string)[][] = []; // Aseguramos que sea un array de arrays
+
+    let mejorOpcion = await buscarValor_1(
+      mitad_tubo,
+      diametro_tubo,
+      rangoDatos
+    );
     //Logger.log("🟢 Mejor opción para columnas " + (columna + 1) + " y " + (columna + 2) + ": " + mejorOpcion);
     salida = salida.concat(mejorOpcion);
   }
+
   // 4. Actualiza el estado con los resultados calculados
   setResultados(resultados);
 };

@@ -1,5 +1,5 @@
 export const obtenerDatosAislador = async (
-  tuboSeleccionado: string // Cambiamos a string para aceptar "5/16"
+  tuboSeleccionado: string | number // Cambiamos a string para aceptar "5/16"
 ): Promise<Aislador | null> => {
   try {
     const response = await fetch("/Aisladores.txt");
@@ -29,7 +29,7 @@ export const obtenerDatosAislador = async (
       .filter((item): item is Aislador => item !== null);
 
     // Convertir tuboSeleccionado a número antes de buscarlo en la tabla
-    const tuboNumeroBuscado = fraccionANumero(tuboSeleccionado);
+    const tuboNumeroBuscado = fraccionANumero(String(tuboSeleccionado));
 
     // Buscar el aislador con el tubo seleccionado
     return (
