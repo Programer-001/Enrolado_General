@@ -157,6 +157,52 @@ export const buscarValor_1 = async (
   return mejorFila ? [mejorFila] : [["No encontrado", "-"]];
 };
 
+export const opciones3 = async (
+  valor1: number,
+  valor2: string,
+  rangoDatos: (number | string)[][] // 🔹 Aceptamos datos mixtos para convertirlos
+): Promise<number[][] | string[][]> => {
+  // Verificar si el rango es un array válido
+  if (!Array.isArray(rangoDatos) || rangoDatos.length === 0) {
+    return [["Error: Rango vacío o inválido"]];
+  }
+
+  // 🔹 Convertir `string` a `number`, asegurando que `rangoDatos` sea `number[][]`
+  let rangoNumerico: number[][] = rangoDatos.map((row) =>
+    row.map((value) => (typeof value === "string" ? parseFloat(value) : value))
+  );
+
+  // Obtener datos del aislador
+  var diam_ceramica = await obtenerDatosAislador(valor2);
+  if (!diam_ceramica) {
+    return [["Error: No se encontró un aislador válido"]];
+  }
+
+  var resultados: { fila: number[]; diferencia: number }[] = []; // Array para almacenar las diferencias y las filas correspondientes
+
+  // Recorrer cada fila del rango de datos
+  for (var i = 0; i < rangoNumerico.length; i++) {
+    if (rangoNumerico[i] && rangoNumerico[i].length >= 2) {
+      var diferencia_1 = Math.abs(rangoNumerico[i][0] - valor1);
+      var diferencia_2 = Math.abs(
+        rangoNumerico[i][1] - diam_ceramica.diametro_final
+      );
+
+      var sumaDiferencias = diferencia_1 + diferencia_2;
+      resultados.push({ fila: rangoNumerico[i], diferencia: sumaDiferencias });
+    }
+  }
+
+  // Ordenar los resultados por la suma de las diferencias (de menor a mayor)
+  resultados.sort((a, b) => a.diferencia - b.diferencia);
+
+  // Tomar los tres primeros resultados más cercanos
+  var mejoresResultados = resultados.slice(0, 3);
+
+  // Devolver las tres filas más cercanas (completas)
+  return mejoresResultados.map((item) => item.fila);
+};
+
 //---------------------------------------------------------------------------->>
 
 export const Enrolado_total = async (
@@ -253,16 +299,15 @@ export const Enrolado_total = async (
   }
 
   //Calcula las mejores opciones de la columnas
+
+  let salida: (number | string)[][] = []; // Aseguramos que sea un array de arrays
   for (let columna = 0; columna < resultados[0].length; columna += 2) {
     let rangoDatos = resultados.map((fila) => [
       fila[columna],
       fila[columna + 1],
     ]);
-
     //Logger.log("🔹 Rango de datos para columnas " + (columna + 1) + " y " + (columna + 2) + ": " + JSON.stringify(rangoDatos));
     //Logger.log("tubo: "+ (longitud_tubo/2)+" tubo: "+tubo);
-    let salida: (number | string)[][] = []; // Aseguramos que sea un array de arrays
-
     let mejorOpcion = await buscarValor_1(
       mitad_tubo,
       diametro_tubo,
@@ -272,6 +317,38 @@ export const Enrolado_total = async (
     salida = salida.concat(mejorOpcion);
   }
 
+  //---3 opciones------->>
+  let salidaNumerica: number[][] = salida.map((row) =>
+    row.map((value) => (typeof value === "string" ? parseFloat(value) : value))
+  );
+  let res3 = await opciones3(mitad_tubo, diametro_tubo, salidaNumerica);
+
+  // 🛠 Verificar si opciones3() devuelve algo
+  console.log("📌 Resultado de opciones3():", JSON.stringify(res3));
+  console.log(
+    "🔍 Tipo de res3:",
+    typeof res3,
+    ", Contenido:",
+    JSON.stringify(res3)
+  );
+
+  if (!Array.isArray(res3) || res3.length === 0) {
+    console.log("⚠ opciones3() no devolvió resultados válidos.");
+    return;
+  }
+
+  // 🔹 Convertimos `res3` en `number[][]` para asegurar compatibilidad en la tabla
+  let res3Convertido: number[][] = res3
+    .map((row) =>
+      row.map((value) =>
+        typeof value === "string" ? parseFloat(value) : value
+      )
+    )
+    .filter((row) => row.every((value) => !isNaN(value))); // 🔹 Filtramos filas con `NaN`
+
+  console.log("✅ res3 listo para mostrar:", JSON.stringify(res3Convertido));
+
+  //-------------------------------->>
   // 4. Actualiza el estado con los resultados calculados
   setResultados(resultados);
 };

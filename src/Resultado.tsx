@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Enrolado_total, buscarValor_1 } from "./funciones/Calculos"; // Asegúrate de importar correctamente
+import { Enrolado_total, buscarValor_1, opciones3 } from "./funciones/Calculos"; // Asegúrate de importar correctamente
 
 interface TablasResultadosProps {
   Voltaje: number;
@@ -16,6 +16,7 @@ const TablasResultados: React.FC<TablasResultadosProps> = ({
 }) => {
   const [resultados, setResultados] = useState<any[][]>([]);
   const [salida, setSalida] = useState<(number | string)[][]>([]);
+  const [mejoresResultados, setMejoresResultados] = useState<number[][]>([]); // 🔹 Nuevo estado para los 3 mejores
 
   useEffect(() => {
     const calcular = async () => {
@@ -52,6 +53,27 @@ const TablasResultados: React.FC<TablasResultadosProps> = ({
         }
 
         setSalida(salidaTemp);
+
+        // 🔹 Convertir `salida` a `number[][]`
+        let salidaNumerica: number[][] = salidaTemp.map((row) =>
+          row.map((value) =>
+            typeof value === "string" ? parseFloat(value) : value
+          )
+        );
+
+        // 🔹 Obtener los 3 mejores resultados con `opciones3`
+        let res3 = await opciones3(mitad_tubo, diametro_tubo, salidaNumerica);
+
+        // 🔹 Convertimos `res3` en `number[][]`
+        let res3Convertido: number[][] = res3
+          .map((row) =>
+            row.map((value) =>
+              typeof value === "string" ? parseFloat(value) : value
+            )
+          )
+          .filter((row) => row.every((value) => !isNaN(value))); // 🔹 Filtramos valores `NaN`
+
+        setMejoresResultados(res3Convertido);
       };
 
       calcularMejoresOpciones();
@@ -91,6 +113,28 @@ const TablasResultados: React.FC<TablasResultadosProps> = ({
         </thead>
         <tbody>
           {salida.map((fila, index) => (
+            <tr key={index}>
+              {fila.map((valor, i) => (
+                <td key={i} className="border border-gray-400 p-2 text-center">
+                  {valor}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* 🔹 Nueva tabla con los tres mejores resultados */}
+      <h2 className="text-xl font-bold mt-6 mb-4">Top 3 Mejores Opciones</h2>
+      <table className="w-full border-collapse border border-gray-400">
+        <thead>
+          <tr>
+            <th className="border border-gray-400 p-2">Longitud</th>
+            <th className="border border-gray-400 p-2">Diámetro</th>
+          </tr>
+        </thead>
+        <tbody>
+          {mejoresResultados.map((fila, index) => (
             <tr key={index}>
               {fila.map((valor, i) => (
                 <td key={i} className="border border-gray-400 p-2 text-center">
