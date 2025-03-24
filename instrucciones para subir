@@ -1,3 +1,10 @@
 git add src/funciones/Cargar_tablas.ts — Agrega el archivo al área de preparación.
 git commit -m "Agregar función en Cargar_tablas.ts para cargar datos de archivos .txt en estado de React" — Realiza el commit con un mensaje explicativo.
 git push origin main — Sube tus cambios al repositorio remoto.
+
+<TablasResultados
+      Voltaje={220}
+      Potencia={2500}
+      Longitud={92}
+      diametro_tubo="5/16"
+    />

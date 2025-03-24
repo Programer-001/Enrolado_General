@@ -1,6 +1,5 @@
 import { obtenerDatosAislador } from "./Aislador";
 import { cargarTablaAWG } from "./Cargar_tablas";
-import { Aislador } from "./Aislador";
 
 export const Resistencia = (Voltaje: number, Potencia: number) => {
   return Math.pow(Voltaje, 2) / Potencia;
@@ -154,7 +153,7 @@ export const buscarValor_1 = async (
     }
   }
 
-  return mejorFila ? [mejorFila] : [["No encontrado", "-"]];
+  return mejorFila ? [mejorFila] : [["No encontrado", "-", "-", "-", "-"]];
 };
 
 export const opciones3 = async (
@@ -278,6 +277,11 @@ export const Enrolado_total = async (
 
       // Calcula el diámetro del aislador
       const resultado_columna2 = T_Diametro[columna] + 2 * T_Diametro[fila];
+      //Guarda Guía, almabre y longitud.
+      let resultado_columna3 = Number(columna + 1);
+      let resultado_columna4 = Number(fila + 1);
+      let resultado_columna5 = longitudCable;
+
       // Verifica si resultado_columna2 es un número válido
       if (isNaN(resultado_columna2)) {
         console.error(
@@ -288,23 +292,38 @@ export const Enrolado_total = async (
       }
 
       // Guarda los resultados temporales
-      resultados_temp.push([resultado_columna1 * 100, resultado_columna2]); // Multiplicamos directamente
+      resultados_temp.push([
+        resultado_columna1 * 100,
+        resultado_columna2,
+        resultado_columna3,
+        resultado_columna4,
+        resultado_columna5,
+      ]); // Multiplicamos directamente
     }
 
     // Se agrega los resultados temporales a la tabla final
     for (let fila = 0; fila < T_Calibre.length; fila++) {
       if (!resultados[fila]) resultados[fila] = [];
-      resultados[fila].push(resultados_temp[fila][0], resultados_temp[fila][1]);
+      resultados[fila].push(
+        resultados_temp[fila][0], // Longitud Enrolada
+        resultados_temp[fila][1], // Diámetro del Aislador
+        resultados_temp[fila][2], // Guía
+        resultados_temp[fila][3], // Alambre
+        resultados_temp[fila][4] // Longitud del Cable
+      );
     }
   }
 
   //Calcula las mejores opciones de la columnas
 
   let salida: (number | string)[][] = []; // Aseguramos que sea un array de arrays
-  for (let columna = 0; columna < resultados[0].length; columna += 2) {
+  for (let columna = 0; columna < resultados[0].length; columna += 5) {
     let rangoDatos = resultados.map((fila) => [
       fila[columna],
       fila[columna + 1],
+      fila[columna + 2], // Posición de la columna
+      fila[columna + 3], // Fila de T_Calibre
+      fila[columna + 4], // Longitud del cable
     ]);
     //Logger.log("🔹 Rango de datos para columnas " + (columna + 1) + " y " + (columna + 2) + ": " + JSON.stringify(rangoDatos));
     //Logger.log("tubo: "+ (longitud_tubo/2)+" tubo: "+tubo);
@@ -313,8 +332,13 @@ export const Enrolado_total = async (
       diametro_tubo,
       rangoDatos
     );
-    //Logger.log("🟢 Mejor opción para columnas " + (columna + 1) + " y " + (columna + 2) + ": " + mejorOpcion);
-    salida = salida.concat(mejorOpcion);
+    if (mejorOpcion.length > 0) {
+      mejorOpcion.forEach((fila) => {
+        salida.push(
+          fila.length === 5 ? fila : ["No encontrado", "-", "-", "-", "-"]
+        );
+      });
+    }
   }
 
   //---3 opciones------->>

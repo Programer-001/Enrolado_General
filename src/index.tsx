@@ -7,11 +7,6 @@ const root = ReactDOM.createRoot(rootElement);
 
 root.render(
   <React.StrictMode>
-    <TablasResultados
-      Voltaje={220}
-      Potencia={2500}
-      Longitud={92}
-      diametro_tubo="5/16"
-    />
+    <App />
   </React.StrictMode>
 );

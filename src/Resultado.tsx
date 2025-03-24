@@ -83,11 +83,23 @@ const TablasResultados: React.FC<TablasResultadosProps> = ({
   return (
     <div className="container mx-auto p-4">
       <h2 className="text-xl font-bold mb-4">Tabla Completa de Resultados</h2>
+
       <table className="w-full border-collapse border border-gray-400">
         <thead>
           <tr>
-            <th className="border border-gray-400 p-2">Longitud</th>
-            <th className="border border-gray-400 p-2">Diámetro</th>
+            {resultados[0]?.map((_, i) => (
+              <>
+                {i % 5 === 4 && i !== 0 ? (
+                  <>
+                    <th className="border border-gray-400 p-2">Enrolado</th>
+                    <th className="border border-gray-400 p-2">Diámetro</th>
+                    <th className="border border-gray-400 p-2">Guía</th>
+                    <th className="border border-gray-400 p-2">Alambre</th>
+                    <th className="border border-gray-400 p-2">Longitud</th>
+                  </>
+                ) : null}
+              </>
+            ))}
           </tr>
         </thead>
         <tbody>
